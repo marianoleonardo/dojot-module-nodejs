@@ -48,13 +48,13 @@ jobs:
       uses: actions/checkout@v2
 
     - name: npm tests
-        env:
-          KAFKA_HOSTS: "localhost:9092"
-          KAFKA_GROUP_ID: "sample-travis"
-          LOCALHOST_MOCK: "http://localhost:5002"
-          DATA_BROKER_URL: ${LOCALHOST_MOCK}
-          AUTH_URL: ${LOCALHOST_MOCK}
-          DEVICE_MANAGER_URL: ${LOCALHOST_MOCK}]
+      env:
+        KAFKA_HOSTS: "localhost:9092"
+        KAFKA_GROUP_ID: "sample-travis"
+        LOCALHOST_MOCK: "http://localhost:5002"
+        DATA_BROKER_URL: ${LOCALHOST_MOCK}
+        AUTH_URL: ${LOCALHOST_MOCK}
+        DEVICE_MANAGER_URL: ${LOCALHOST_MOCK}]
       run: |
         npm run docs
         docker network create kafkanet
