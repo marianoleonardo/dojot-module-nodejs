@@ -7,6 +7,7 @@ on:
   pull_request:
 
 jobs:
+
   integration-tests:
     name: Integration tests
     # If the commit message contains 'ci skip', it is not necessary to run this job
@@ -50,3 +51,44 @@ jobs:
         file: coverage/lcov.info # Created when 'npm test' is executed
         flags: Data-broker # Flags allow you to isolate coverage reports for different tests
         name: data-broker # Custom name for the upload
+
+  gh-pages:
+    needs: integration-tests
+    name: Generate documentation and Publish in gh-pages
+    runs-on: ubuntu-18.04
+    if: contains(github.ref, 'refs/pull/') == false # if this a PR doesn't run
+    strategy:
+      matrix:
+        node-version: [10.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Version Doc
+        id: version_doc
+        env:
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          export TAG_VERSION=$(sh .github/workflows/scripts/translate_docker_tag.sh)
+          echo Documentation Version $TAG_VERSION
+          echo ::set-output name=version::$TAG_VERSION
+      - name: Generate docs
+        env:
+          VERSION_NAME: ${{ steps.version_doc.outputs.version }}
+        run: |
+          npm install
+          npm run docs
+      - name: Publish Documentation
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_branch: gh-pages
+          publish_dir: ./docs
+          destination_dir: /
+          keep_files: true
+          allow_empty_commit: false
