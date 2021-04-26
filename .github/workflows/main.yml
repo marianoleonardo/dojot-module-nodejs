@@ -92,6 +92,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: ./docs
-          destination_dir: /
+          destination_dir: docs
           keep_files: true
           allow_empty_commit: false
