@@ -49,8 +49,8 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         file: coverage/lcov.info # Created when 'npm test' is executed
-        flags: Data-broker # Flags allow you to isolate coverage reports for different tests
-        name: data-broker # Custom name for the upload
+        flags: Dojot-module-nodejs # Flags allow you to isolate coverage reports for different tests
+        name: dojot-module-nodejs # Custom name for the upload
 
   gh-pages:
     needs: integration-tests
