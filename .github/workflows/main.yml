@@ -78,15 +78,18 @@ jobs:
           export TAG_VERSION=$(sh .github/workflows/scripts/translate_docker_tag.sh)
           echo Documentation Version $TAG_VERSION
           echo ::set-output name=version::$TAG_VERSION
+
       - name: Generate docs
         env:
           VERSION_NAME: ${{ steps.version_doc.outputs.version }}
         run: |
           npm install
           npm run docs
+
       - name: Publish Documentation
         uses: peaceiris/actions-gh-pages@v3
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: ./docs
           destination_dir: /
